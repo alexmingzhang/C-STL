@@ -1,5 +1,7 @@
 #include "vector.h"
 
+#include <assert.h>
+
 vector vector_construct() {
     vector v = malloc(sizeof(struct _vector));
     v->size = 0;
@@ -14,14 +16,11 @@ void vector_destruct(vector v) {
 }
 
 vec_t vector_at(vector v, size_t index) {
-    if (index >= v->size) {
-        return NULL;
-    }
-
+    assert(index < v->size);
     return v->data[index];
 }
 
-vector_it vector_data(vector v) { return (v->data); }
+vec_t *vector_data(vector v) { return (v->data); }
 
 vector_it vector_begin(vector v) { return (v->data); }
 

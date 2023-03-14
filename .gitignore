@@ -1,6 +1,5 @@
 .DS_Store
 .vscode
-update.sh
-test*
-*.o
-makefile
+/test*
+/*.o
+/makefile
