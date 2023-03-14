@@ -4,6 +4,7 @@
 #include "map.h"
 
 #include <assert.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,7 +23,8 @@ map_node map_node_construct(key_t key, val_t val) {
 
 void map_node_print(map_node n) {
     printf(
-        "Key: %d | Val: %d | Color: %c | Parent: %d | Left: %d | Right: %d\n",
+        "Key: %ld | Val: %ld | Color: %c | Parent: %ld | Left: %ld | Right: "
+        "%ld\n",
         n->key, n->val, n->color == RED ? 'R' : 'B', n->parent->val,
         n->left->val, n->right->val);
 }
@@ -30,7 +32,7 @@ void map_node_print(map_node n) {
 map map_construct() {
     map m = malloc(sizeof(struct _map));
     m->nil = malloc(sizeof(struct _map_node));
-    m->nil->val = 420;
+    m->nil->val = LONG_MAX;
     m->nil->parent = m->nil;
     m->nil->left = m->nil;
     m->nil->right = m->nil;
@@ -45,6 +47,28 @@ map map_construct() {
     m->root = m->nil;
 
     return m;
+}
+
+map_node map_find(map T, key_t key) {
+    return map_node_find(T->root, key, T->nil);
+}
+
+map_node map_node_find(map_node n, key_t key, map_node nil) {
+    if (n == nil) {
+        return NULL;
+    }
+
+    if (key == n->key) {
+        return n;
+    }
+
+    if (key > n->key) {
+        return map_node_find(n->right, key, nil);
+    }
+
+    if (key < n->key) {
+        return map_node_find(n->left, key, nil);
+    }
 }
 
 void map_left_rotate(map T, map_node x) {
@@ -179,7 +203,9 @@ void map_print_inorder(map_node n, map_node nil) {
 }
 
 void map_verify(map T) {
+    // Ensure the root is black
     assert(T->root->color == BLACK);
+
     int prev_num_black_encountered = -1;
     map_node_recursive_verify(T->root, T->nil, 0, &prev_num_black_encountered);
 }
@@ -188,8 +214,11 @@ void map_node_recursive_verify(map_node n, map_node nil,
                                int num_black_encountered,
                                int *prev_num_black_encountered) {
     if (n == nil) {
+        // Ensure every leaf (nil) is black
         assert(n->color == BLACK);
 
+        // Ensure that every path from a node to its descendant leaves goes
+        // through the same number of black nodes
         assert(*prev_num_black_encountered == -1 ||
                num_black_encountered == *prev_num_black_encountered);
 
@@ -198,18 +227,20 @@ void map_node_recursive_verify(map_node n, map_node nil,
         return;
     }
 
+    // Ensure every node is either red of black
+    assert(n->color == RED || n->color == BLACK);
+
+    // Ensure a red node does not have any red children
+    if (n->color == RED) {
+        assert(n->left->color == BLACK && n->right->color == BLACK);
+    }
+
     if (n->color == BLACK) {
         ++num_black_encountered;
     }
 
     map_node_recursive_verify(n->left, nil, num_black_encountered,
                               prev_num_black_encountered);
-
-    assert(n->color == RED || n->color == BLACK);
-
-    if (n->color == RED) {
-        assert(n->left->color == BLACK && n->right->color == BLACK);
-    }
 
     map_node_recursive_verify(n->right, nil, num_black_encountered,
                               prev_num_black_encountered);

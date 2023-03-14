@@ -4,16 +4,12 @@
 
 #include <stdbool.h>
 
-#define LEFT 0
-#define RIGHT 1
 #define RED false
 #define BLACK true
-
-typedef int dir_t;
 typedef bool color_t;
 
-typedef int key_t;
-typedef int val_t;
+typedef long key_t;
+typedef long val_t;
 
 typedef struct _map_node {
     struct _map_node *parent;
@@ -38,9 +34,11 @@ typedef struct _map {
 
 map map_construct();
 
-void map_rotate_left(map, map_node);
-void map_rotate_right(map, map_node);
+map_node map_find(map, key_t);
+map_node map_node_find(map_node, key_t, map_node);
 
+void map_left_rotate(map, map_node);
+void map_right_rotate(map, map_node);
 void map_insert(map, map_node);
 
 void map_print(map);
