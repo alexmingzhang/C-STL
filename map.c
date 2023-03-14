@@ -1,4 +1,5 @@
 /* Based on "Introduction to Algorithms" by CLRS */
+// TODO: Comments
 
 #include "map.h"
 
@@ -20,26 +21,28 @@ map_node map_node_construct(key_t key, val_t val) {
 }
 
 void map_node_print(map_node n) {
-    printf("ID: %lu | Key: %d | Val: %d | Parent: %d | Left: %d | Right: %d\n",
-           (unsigned long)n, n->key, n->val, n->parent->val, n->left->val,
-           n->right->val);
+    printf(
+        "Key: %d | Val: %d | Color: %c | Parent: %d | Left: %d | Right: %d\n",
+        n->key, n->val, n->color == RED ? 'R' : 'B', n->parent->val,
+        n->left->val, n->right->val);
 }
 
 map map_construct() {
     map m = malloc(sizeof(struct _map));
     m->nil = malloc(sizeof(struct _map_node));
+    m->nil->val = 420;
     m->nil->parent = m->nil;
     m->nil->left = m->nil;
     m->nil->right = m->nil;
     m->nil->color = BLACK;
 
-    m->root = malloc(sizeof(struct _map_node));
-    m->root->parent = m->nil;
-    m->root->left = m->nil;
-    m->root->right = m->nil;
-    m->root->color = BLACK;
+    // m->root = malloc(sizeof(struct _map_node));
+    // m->root->parent = m->nil;
+    // m->root->left = m->nil;
+    // m->root->right = m->nil;
+    // m->root->color = BLACK;
 
-    m->first_insert = true;
+    m->root = m->nil;
 
     return m;
 }
@@ -57,7 +60,6 @@ void map_left_rotate(map T, map_node x) {
     y->parent = x->parent;
 
     if (x->parent == T->nil) {
-        printf("Setting root to %d okay\n", x->val);
         T->root = y;
     } else if (x == x->parent->left) {
         x->parent->left = y;
@@ -71,10 +73,6 @@ void map_left_rotate(map T, map_node x) {
 
 void map_right_rotate(map T, map_node y) {
     assert(y != T->nil);
-
-    if (y == T->root) {
-        return;
-    }
 
     map_node x = y->left;
     y->left = x->right;
@@ -100,13 +98,6 @@ void map_right_rotate(map T, map_node y) {
 void map_insert(map T, map_node z) {
     map_node x = T->root;
 
-    if (T->first_insert) {
-        x->key = z->key;
-        x->val = z->val;
-        T->first_insert = false;
-        return;
-    }
-
     map_node y = T->nil;
 
     while (x != T->nil) {
@@ -131,10 +122,7 @@ void map_insert(map T, map_node z) {
     z->right = T->nil;
     z->color = RED;
 
-    map_insert_fixup(T, z);
-}
-
-void map_insert_fixup(map T, map_node z) {
+    /* Insert fixup */
     while (z->parent->color == RED) {
         if (z->parent == z->parent->parent->left) {
             map_node y = z->parent->parent->right;
@@ -186,8 +174,43 @@ void map_print_inorder(map_node n, map_node nil) {
     }
 
     map_print_inorder(n->left, nil);
-
     map_node_print(n);
-
     map_print_inorder(n->right, nil);
+}
+
+void map_verify(map T) {
+    assert(T->root->color == BLACK);
+    int prev_num_black_encountered = -1;
+    map_node_recursive_verify(T->root, T->nil, 0, &prev_num_black_encountered);
+}
+
+void map_node_recursive_verify(map_node n, map_node nil,
+                               int num_black_encountered,
+                               int *prev_num_black_encountered) {
+    if (n == nil) {
+        assert(n->color == BLACK);
+
+        assert(*prev_num_black_encountered == -1 ||
+               num_black_encountered == *prev_num_black_encountered);
+
+        *prev_num_black_encountered = num_black_encountered;
+
+        return;
+    }
+
+    if (n->color == BLACK) {
+        ++num_black_encountered;
+    }
+
+    map_node_recursive_verify(n->left, nil, num_black_encountered,
+                              prev_num_black_encountered);
+
+    assert(n->color == RED || n->color == BLACK);
+
+    if (n->color == RED) {
+        assert(n->left->color == BLACK && n->right->color == BLACK);
+    }
+
+    map_node_recursive_verify(n->right, nil, num_black_encountered,
+                              prev_num_black_encountered);
 }

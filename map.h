@@ -34,15 +34,17 @@ void map_node_print(map_node);
 typedef struct _map {
     map_node nil;
     map_node root;
-    bool first_insert;
 } *map;
 
 map map_construct();
 
 void map_rotate_left(map, map_node);
 void map_rotate_right(map, map_node);
+
 void map_insert(map, map_node);
-void map_insert_fixup(map, map_node);
 
 void map_print(map);
 void map_print_inorder(map_node, map_node);
+
+void map_verify(map);
+void map_node_recursive_verify(map_node, map_node, int, int *);
