@@ -10,8 +10,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-map_node map_node_construct(map_key_t key, map_val_t val) {
-    map_node n = malloc(sizeof(struct _map_node));
+#include "util.h"
+
+map_node *map_node_construct(map_key_t key, map_val_t val) {
+    map_node *n = malloc(sizeof(map_node));
     // n->parent = NULL;
     // n->left = NULL;
     // n->right = NULL;
@@ -23,7 +25,7 @@ map_node map_node_construct(map_key_t key, map_val_t val) {
     return n;
 }
 
-void map_node_print(map_node n) {
+void map_node_print(map_node *n) {
     printf(
         "Key: %ld | Val: %i | Color: %c | Parent: %i | Left: %i | Right: "
         "%ld\n",
@@ -31,16 +33,16 @@ void map_node_print(map_node n) {
         n->left->val, n->right->val);
 }
 
-map map_construct() {
-    map m = malloc(sizeof(struct _map));
-    m->nil = malloc(sizeof(struct _map_node));
+map *map_construct() {
+    map *m = malloc(sizeof(map));
+    m->nil = malloc(sizeof(map_node));
     m->nil->val.ld = LONG_MAX;
     m->nil->parent = m->nil;
     m->nil->left = m->nil;
     m->nil->right = m->nil;
     m->nil->color = BLACK;
 
-    // m->root = malloc(sizeof(struct _map_node));
+    // m->root = malloc(sizeof(map_node));
     // m->root->parent = m->nil;
     // m->root->left = m->nil;
     // m->root->right = m->nil;
@@ -51,11 +53,13 @@ map map_construct() {
     return m;
 }
 
-map_node map_find(map T, map_key_t key) {
+map_node *map_find(map *T, map_key_t key) {
     return map_node_find(T->root, key, T->nil);
 }
 
-map_node map_node_find(map_node n, map_key_t key, map_node nil) {
+map_node *map_node_find(map_node *n, map_key_t key, map_node *nil) {
+    printf("asdf: %ld %ld \n", n->val.ld, key.ld);
+    print_bytes(&(n->val), 8);
     if (n == nil) {
         return NULL;
     }
@@ -71,19 +75,17 @@ map_node map_node_find(map_node n, map_key_t key, map_node nil) {
 
     if (key.ld > n->key.ld) {
         return map_node_find(n->right, key, nil);
-    }
-
-    if (key.ld < n->key.ld) {
+    } else if (key.ld < n->key.ld) {
         return map_node_find(n->left, key, nil);
+    } else {
+        return n;
     }
-
-    return n;
 }
 
-void map_left_rotate(map T, map_node x) {
+void map_left_rotate(map *T, map_node *x) {
     assert(x != T->nil);
 
-    map_node y = x->right;
+    map_node *y = x->right;
     x->right = y->left;
 
     if (y->left != T->nil) {
@@ -104,10 +106,10 @@ void map_left_rotate(map T, map_node x) {
     x->parent = y;
 }
 
-void map_right_rotate(map T, map_node y) {
+void map_right_rotate(map *T, map_node *y) {
     assert(y != T->nil);
 
-    map_node x = y->left;
+    map_node *x = y->left;
     y->left = x->right;
 
     if (x->right != T->nil) {
@@ -128,10 +130,10 @@ void map_right_rotate(map T, map_node y) {
     y->parent = x;
 }
 
-void map_insert(map T, map_node z) {
-    map_node x = T->root;
+void map_insert(map *T, map_node *z) {
+    map_node *x = T->root;
 
-    map_node y = T->nil;
+    map_node *y = T->nil;
 
     while (x != T->nil) {
         y = x;
@@ -158,10 +160,10 @@ void map_insert(map T, map_node z) {
     map_insert_fixup(T, z);
 }
 
-void map_insert_fixup(map T, map_node z) {
+void map_insert_fixup(map *T, map_node *z) {
     while (z->parent->color == RED) {
         if (z->parent == z->parent->parent->left) {
-            map_node y = z->parent->parent->right;
+            map_node *y = z->parent->parent->right;
 
             if (y->color == RED) {
                 z->parent->color = BLACK;
@@ -179,7 +181,7 @@ void map_insert_fixup(map T, map_node z) {
                 map_right_rotate(T, z->parent->parent);
             }
         } else {
-            map_node y = z->parent->parent->left;
+            map_node *y = z->parent->parent->left;
 
             if (y->color == RED) {
                 z->parent->color = BLACK;
@@ -202,9 +204,9 @@ void map_insert_fixup(map T, map_node z) {
     T->root->color = BLACK;
 }
 
-void map_print(map T) { map_print_inorder(T->root, T->nil); }
+void map_print(map *T) { map_print_inorder(T->root, T->nil); }
 
-void map_print_inorder(map_node n, map_node nil) {
+void map_print_inorder(map_node *n, map_node *nil) {
     if (n == nil) {
         return;
     }
@@ -214,7 +216,7 @@ void map_print_inorder(map_node n, map_node nil) {
     map_print_inorder(n->right, nil);
 }
 
-void map_verify(map T) {
+void map_verify(map *T) {
     // Ensure the root is black
     assert(T->root->color == BLACK);
 
@@ -222,7 +224,7 @@ void map_verify(map T) {
     map_node_recursive_verify(T->root, T->nil, 0, &prev_num_black_encountered);
 }
 
-void map_node_recursive_verify(map_node n, map_node nil,
+void map_node_recursive_verify(map_node *n, map_node *nil,
                                int num_black_encountered,
                                int *prev_num_black_encountered) {
     if (n == nil) {

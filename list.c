@@ -2,8 +2,8 @@
 
 #include <stdio.h>
 
-list list_construct() {
-    list l = malloc(sizeof(struct _list));
+list *list_construct() {
+    list *l = malloc(sizeof(struct _list));
     l->head = malloc(sizeof(struct _list_node));
     l->tail = malloc(sizeof(struct _list_node));
 
@@ -16,10 +16,10 @@ list list_construct() {
     return l;
 }
 
-void list_destruct(list l) {
-    list_node it = list_end(l);
+void list_destruct(list *l) {
+    list_it it = list_end(l);
     do {
-        list_node to_free = it;
+        list_node *to_free = it;
         it = it->prev;
         free(to_free);
     } while (it != NULL);
@@ -27,13 +27,13 @@ void list_destruct(list l) {
     free(l);
 }
 
-list_it list_begin(list l) { return l->head->next; }
+list_it list_begin(list *l) { return l->head->next; }
 
-list_it list_end(list l) { return l->tail; }
+list_it list_end(list *l) { return l->tail; }
 
-list_it list_rbegin(list l) { return l->tail->prev; }
+list_it list_rbegin(list *l) { return l->tail->prev; }
 
-list_it list_rend(list l) { return l->head; }
+list_it list_rend(list *l) { return l->head; }
 
 void list_it_add(list_it *it, size_t pos) {
     for (size_t i = 0; i < pos; ++i) {
@@ -48,7 +48,7 @@ void list_it_sub(list_it *it, size_t pos) {
 }
 
 void list_insert(list_it *it, list_val_t val) {
-    list_node n = malloc(sizeof(struct _list_node));
+    list_node *n = malloc(sizeof(struct _list_node));
     n->val = val;
 
     (*it)->prev->next = n;
@@ -62,7 +62,7 @@ void list_insert(list_it *it, list_val_t val) {
     // n->prev = *it;
 }
 
-void list_push_back(list l, list_val_t val) {
+void list_push_back(list *l, list_val_t val) {
     l->tail->val = val;
     l->tail->next = malloc(sizeof(struct _list_node));
     l->tail->next->prev = l->tail;

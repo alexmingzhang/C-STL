@@ -2,45 +2,45 @@
 
 #include <assert.h>
 
-vector vector_construct() {
-    vector v = malloc(sizeof(struct _vector));
+vector *vector_construct() {
+    vector *v = malloc(sizeof(struct _vector));
     v->size = 0;
     v->capacity = 1;
     v->data = malloc(sizeof(vec_val_t));
     return v;
 }
 
-void vector_destruct(vector v) {
+void vector_destruct(vector *v) {
     free(v->data);
     free(v);
 }
 
-vec_val_t vector_at(vector v, size_t index) {
+vec_val_t vector_at(vector *v, size_t index) {
     assert(index < v->size);
     return v->data[index];
 }
 
-vec_val_t *vector_data(vector v) { return (v->data); }
+vec_val_t *vector_data(vector *v) { return (v->data); }
 
-vector_it vector_begin(vector v) { return (v->data); }
+vector_it vector_begin(vector *v) { return (v->data); }
 
-vector_it vector_end(vector v) { return (v->data + v->size); }
+vector_it vector_end(vector *v) { return (v->data + v->size); }
 
-bool vector_is_empty(vector v) { return v->size == 0; }
+bool vector_is_empty(vector *v) { return v->size == 0; }
 
-void vector_reserve(vector v, size_t new_capacity) {
+void vector_reserve(vector *v, size_t new_capacity) {
     v->data = realloc(v->data, sizeof(vec_val_t) * new_capacity);
     v->capacity = new_capacity;
 }
 
-void vector_shrink_to_fit(vector v) {
+void vector_shrink_to_fit(vector *v) {
     v->data = realloc(v->data, sizeof(vec_val_t) * v->size);
     v->capacity = v->size;
 }
 
-void vector_clear(vector v) { v->size = 0; }
+void vector_clear(vector *v) { v->size = 0; }
 
-void vector_insert(vector v, size_t pos, vec_val_t value) {
+void vector_insert(vector *v, size_t pos, vec_val_t value) {
     if (v->capacity < v->size + 1) {
         vector_reserve(v, v->capacity * 2);
     }
@@ -53,14 +53,14 @@ void vector_insert(vector v, size_t pos, vec_val_t value) {
     ++v->size;
 }
 
-void vector_erase(vector v, size_t index) {
+void vector_erase(vector *v, size_t index) {
     for (size_t i = index; i < v->size - 1; ++i) {
         v->data[i] = v->data[i + 1];
     }
     --v->size;
 }
 
-void vector_erase_range(vector v, size_t first, size_t last) {
+void vector_erase_range(vector *v, size_t first, size_t last) {
     size_t num_erase = last - first;
     for (size_t i = first; i < v->size - num_erase; ++i) {
         v->data[i] = v->data[i + num_erase];
@@ -68,7 +68,7 @@ void vector_erase_range(vector v, size_t first, size_t last) {
     v->size -= num_erase;
 }
 
-void vector_pushback(vector v, vec_val_t value) {
+void vector_pushback(vector *v, vec_val_t value) {
     if (v->capacity < v->size + 1) {
         vector_reserve(v, v->capacity * 2);
     }
