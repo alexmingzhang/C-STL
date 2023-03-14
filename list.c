@@ -49,7 +49,7 @@ void list_it_sub(list_it *it, size_t pos) {
 
 void list_insert(list_it *it, list_t val) {
     list_node n = malloc(sizeof(struct _list_node));
-    n->value = val;
+    n->val = val;
 
     (*it)->prev->next = n;
     n->prev = (*it)->prev;
@@ -63,7 +63,7 @@ void list_insert(list_it *it, list_t val) {
 }
 
 void list_push_back(list l, list_t val) {
-    l->tail->value = val;
+    l->tail->val = val;
     l->tail->next = malloc(sizeof(struct _list_node));
     l->tail->next->prev = l->tail;
     l->tail->next->next = NULL;

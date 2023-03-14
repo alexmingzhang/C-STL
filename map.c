@@ -1,3 +1,5 @@
+/* Based on "Introduction to Algorithms" by CLRS */
+
 #include "map.h"
 
 #include <assert.h>
@@ -6,89 +8,136 @@
 
 map_node map_node_construct(key_t key, val_t val) {
     map_node n = malloc(sizeof(struct _map_node));
-    n->parent = NULL;
-    n->child[LEFT] = NULL;
-    n->child[RIGHT] = NULL;
-    n->color = BLACK;
+    // n->parent = NULL;
+    // n->left = NULL;
+    // n->right = NULL;
+    // n->color = RED;
 
     n->key = key;
-    n->value = val;
+    n->val = val;
 
     return n;
 }
 
+void map_node_print(map_node n) {
+    printf("ID: %lu | Key: %d | Val: %d | Parent: %d | Left: %d | Right: %d\n",
+           (unsigned long)n, n->key, n->val, n->parent->val, n->left->val,
+           n->right->val);
+}
+
 map map_construct() {
     map m = malloc(sizeof(struct _map));
-    m->root = NULL;
+    m->nil = malloc(sizeof(struct _map_node));
+    m->nil->parent = m->nil;
+    m->nil->left = m->nil;
+    m->nil->right = m->nil;
+    m->nil->color = BLACK;
+
+    m->root = malloc(sizeof(struct _map_node));
+    m->root->parent = m->nil;
+    m->root->left = m->nil;
+    m->root->right = m->nil;
+    m->root->color = BLACK;
+
+    m->first_insert = true;
+
     return m;
 }
 
-map_node map_rotate(map tree, map_node root, dir_t dir) {
-    printf("map_rotate\n");
-    dir_t opp_dir = 1 - dir;
-    map_node G = root->parent;
-    map_node S = root->child[opp_dir];
+void map_left_rotate(map T, map_node x) {
+    assert(x != T->nil);
 
-    assert(S != NULL);
-    map_node C = S->child[dir];
+    map_node y = x->right;
+    x->right = y->left;
 
-    root->child[opp_dir] = C;
-
-    if (C != NULL) {
-        C->parent = root;
+    if (y->left != T->nil) {
+        y->left->parent = x;
     }
 
-    S->child[dir] = root;
-    root->parent = S;
-    S->parent = G;
+    y->parent = x->parent;
 
-    if (G != NULL) {
-        G->child[root == G->child[RIGHT] ? RIGHT : LEFT] = S;
+    if (x->parent == T->nil) {
+        printf("Setting root to %d okay\n", x->val);
+        T->root = y;
+    } else if (x == x->parent->left) {
+        x->parent->left = y;
     } else {
-        tree->root = S;
+        x->parent->right = y;
     }
 
-    return S;
+    y->left = x;
+    x->parent = y;
+}
+
+void map_right_rotate(map T, map_node y) {
+    assert(y != T->nil);
+
+    if (y == T->root) {
+        return;
+    }
+
+    map_node x = y->left;
+    y->left = x->right;
+
+    if (x->right != T->nil) {
+        x->right->parent = y;
+    }
+
+    x->parent = y->parent;
+
+    if (y->parent == T->nil) {
+        T->root = x;
+    } else if (y == y->parent->right) {
+        y->parent->right = x;
+    } else {
+        y->parent->left = x;
+    }
+
+    x->right = y;
+    y->parent = x;
 }
 
 void map_insert(map T, map_node z) {
     map_node x = T->root;
-    map_node y = NULL;
 
-    while (x != NULL) {
+    if (T->first_insert) {
+        x->key = z->key;
+        x->val = z->val;
+        T->first_insert = false;
+        return;
+    }
+
+    map_node y = T->nil;
+
+    while (x != T->nil) {
         y = x;
         if (z->key < x->key) {
-            x = x->child[LEFT];
+            x = x->left;
         } else {
-            x = x->child[RIGHT];
+            x = x->right;
         }
     }
 
     z->parent = y;
-    if (y == NULL) {
+    if (y == T->nil) {
         T->root = z;
     } else if (z->key < y->key) {
-        y->child[LEFT] = z;
+        y->left = z;
     } else {
-        y->child[RIGHT] = z;
+        y->right = z;
     }
 
-    z->child[LEFT] = NULL;
-    z->child[RIGHT] = NULL;
+    z->left = T->nil;
+    z->right = T->nil;
     z->color = RED;
 
     map_insert_fixup(T, z);
 }
 
 void map_insert_fixup(map T, map_node z) {
-    while (z != NULL && z->parent != NULL && z->parent->parent != NULL &&
-           z->parent->color == RED) {
-        if (z->parent == z->parent->parent->child[LEFT]) {
-            map_node y = z->parent->parent->child[RIGHT];
-
-            if (y == NULL) {
-                return;
-            }
+    while (z->parent->color == RED) {
+        if (z->parent == z->parent->parent->left) {
+            map_node y = z->parent->parent->right;
 
             if (y->color == RED) {
                 z->parent->color = BLACK;
@@ -96,21 +145,17 @@ void map_insert_fixup(map T, map_node z) {
                 z->parent->parent->color = RED;
                 z = z->parent->parent;
             } else {
-                if (z == z->parent->child[RIGHT]) {
+                if (z == z->parent->right) {
                     z = z->parent;
-                    map_rotate(T, z, LEFT);
+                    map_left_rotate(T, z);
                 }
 
                 z->parent->color = BLACK;
                 z->parent->parent->color = RED;
-                map_rotate(T, z->parent->parent, RIGHT);
+                map_right_rotate(T, z->parent->parent);
             }
         } else {
-            map_node y = z->parent->parent->child[LEFT];
-
-            if (y == NULL) {
-                return;
-            }
+            map_node y = z->parent->parent->left;
 
             if (y->color == RED) {
                 z->parent->color = BLACK;
@@ -118,33 +163,31 @@ void map_insert_fixup(map T, map_node z) {
                 z->parent->parent->color = RED;
                 z = z->parent->parent;
             } else {
-                if (z == z->parent->child[LEFT]) {
+                if (z == z->parent->left) {
                     z = z->parent;
-                    map_rotate(T, z, RIGHT);
+                    map_right_rotate(T, z);
                 }
 
                 z->parent->color = BLACK;
                 z->parent->parent->color = RED;
-                map_rotate(T, z->parent->parent, LEFT);
+                map_left_rotate(T, z->parent->parent);
             }
         }
     }
+
+    T->root->color = BLACK;
 }
 
-void map_print(map m) { map_print_inorder(m->root); }
+void map_print(map T) { map_print_inorder(T->root, T->nil); }
 
-void map_print_inorder(map_node n) {
-    if (n == NULL) {
+void map_print_inorder(map_node n, map_node nil) {
+    if (n == nil) {
         return;
     }
 
-    map_print_inorder(n->child[LEFT]);
+    map_print_inorder(n->left, nil);
 
-    printf("%d ", n->value);
+    map_node_print(n);
 
-    if (n->child[LEFT] == NULL && n->child[RIGHT] == NULL) {
-        printf("(leaf! color=%s)", n->color == RED ? "RED" : "BLACK");
-    }
-
-    map_print_inorder(n->child[RIGHT]);
+    map_print_inorder(n->right, nil);
 }

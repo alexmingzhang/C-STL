@@ -6,7 +6,7 @@
 typedef void *list_t;
 
 typedef struct _list_node {
-    list_t value;
+    list_t val;
     struct _list_node *next;
     struct _list_node *prev;
 } *list_node;
