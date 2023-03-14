@@ -3,8 +3,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-typedef void* vec_t;
-typedef vec_t* vector_it;
+#include "tvar.h"
+
+typedef tvar vec_val_t;
+typedef vec_val_t* vector_it;
 
 /**
  * @brief Resizeable array similar to std::vector
@@ -13,7 +15,7 @@ typedef vec_t* vector_it;
 typedef struct _vector {
     size_t size;
     size_t capacity;
-    vec_t* data;
+    vec_val_t* data;
 }* vector;
 
 vector vector_construct();
@@ -24,28 +26,28 @@ void vector_destruct(vector);
  *
  * @return vec_t
  */
-vec_t vector_at(vector, size_t);
+vec_val_t vector_at(vector, size_t);
 
 /**
  * @brief Returns the value of the first element of the vector
  *
  * @return vec_t
  */
-vec_t vector_front(vector);
+vec_val_t vector_front(vector);
 
 /**
  * @brief Returns the value of the last element of the vector
  *
  * @return vec_t
  */
-vec_t vector_back(vector);
+vec_val_t vector_back(vector);
 
 /**
  * @brief Returns a pointer to the array where the elements are contained
  *
  * @return vector_it
  */
-vec_t* vector_data(vector);
+vec_val_t* vector_data(vector);
 
 /**
  * @brief Returns an iterator to the first element of the vector
@@ -83,7 +85,7 @@ void vector_shrink_to_fit(vector);
 
 // Modifiers
 void vector_clear(vector);
-void vector_insert(vector, size_t, void*);
+void vector_insert(vector, size_t, vec_val_t);
 void vector_erase(vector, size_t);
 void vector_erase_range(vector, size_t, size_t);
-void vector_pushback(vector, void*);
+void vector_pushback(vector, vec_val_t);

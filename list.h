@@ -3,10 +3,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-typedef void *list_t;
+#include "tvar.h"
+
+typedef tvar list_val_t;
 
 typedef struct _list_node {
-    list_t val;
+    list_val_t val;
     struct _list_node *next;
     struct _list_node *prev;
 } *list_node;
@@ -69,16 +71,16 @@ void list_it_sub(list_it *, size_t);
  * @brief Insert something right behind the provided list iterator
  *
  */
-void list_insert(list_it *, list_t);
+void list_insert(list_it *, list_val_t);
 
 /**
  * @brief Add something to the front of the list
  *
  */
-void list_push_front(list, list_t);
+void list_push_front(list, list_val_t);
 
 /**
  * @brief Add something to the end of the list
  *
  */
-void list_push_back(list, list_t);
+void list_push_back(list, list_val_t);

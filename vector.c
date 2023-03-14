@@ -6,7 +6,7 @@ vector vector_construct() {
     vector v = malloc(sizeof(struct _vector));
     v->size = 0;
     v->capacity = 1;
-    v->data = malloc(sizeof(void *));
+    v->data = malloc(sizeof(vec_val_t));
     return v;
 }
 
@@ -15,12 +15,12 @@ void vector_destruct(vector v) {
     free(v);
 }
 
-vec_t vector_at(vector v, size_t index) {
+vec_val_t vector_at(vector v, size_t index) {
     assert(index < v->size);
     return v->data[index];
 }
 
-vec_t *vector_data(vector v) { return (v->data); }
+vec_val_t *vector_data(vector v) { return (v->data); }
 
 vector_it vector_begin(vector v) { return (v->data); }
 
@@ -29,18 +29,18 @@ vector_it vector_end(vector v) { return (v->data + v->size); }
 bool vector_is_empty(vector v) { return v->size == 0; }
 
 void vector_reserve(vector v, size_t new_capacity) {
-    v->data = realloc(v->data, sizeof(void *) * new_capacity);
+    v->data = realloc(v->data, sizeof(vec_val_t) * new_capacity);
     v->capacity = new_capacity;
 }
 
 void vector_shrink_to_fit(vector v) {
-    v->data = realloc(v->data, sizeof(void *) * v->size);
+    v->data = realloc(v->data, sizeof(vec_val_t) * v->size);
     v->capacity = v->size;
 }
 
 void vector_clear(vector v) { v->size = 0; }
 
-void vector_insert(vector v, size_t pos, void *value) {
+void vector_insert(vector v, size_t pos, vec_val_t value) {
     if (v->capacity < v->size + 1) {
         vector_reserve(v, v->capacity * 2);
     }
@@ -68,7 +68,7 @@ void vector_erase_range(vector v, size_t first, size_t last) {
     v->size -= num_erase;
 }
 
-void vector_pushback(vector v, void *value) {
+void vector_pushback(vector v, vec_val_t value) {
     if (v->capacity < v->size + 1) {
         vector_reserve(v, v->capacity * 2);
     }

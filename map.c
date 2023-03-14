@@ -1,5 +1,7 @@
 /* Based on "Introduction to Algorithms" by CLRS */
 // TODO: Comments
+// TODO: insert_int, insert_str, find_int, find_str
+// TODO: random access iterator
 
 #include "map.h"
 
@@ -8,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-map_node map_node_construct(key_t key, val_t val) {
+map_node map_node_construct(map_key_t key, map_val_t val) {
     map_node n = malloc(sizeof(struct _map_node));
     // n->parent = NULL;
     // n->left = NULL;
@@ -23,16 +25,16 @@ map_node map_node_construct(key_t key, val_t val) {
 
 void map_node_print(map_node n) {
     printf(
-        "Key: %ld | Val: %ld | Color: %c | Parent: %ld | Left: %ld | Right: "
+        "Key: %ld | Val: %i | Color: %c | Parent: %i | Left: %i | Right: "
         "%ld\n",
-        n->key, n->val, n->color == RED ? 'R' : 'B', n->parent->val,
+        n->key.i, n->val, n->color == RED ? 'R' : 'B', n->parent->val,
         n->left->val, n->right->val);
 }
 
 map map_construct() {
     map m = malloc(sizeof(struct _map));
     m->nil = malloc(sizeof(struct _map_node));
-    m->nil->val = LONG_MAX;
+    m->nil->val.ld = LONG_MAX;
     m->nil->parent = m->nil;
     m->nil->left = m->nil;
     m->nil->right = m->nil;
@@ -49,26 +51,33 @@ map map_construct() {
     return m;
 }
 
-map_node map_find(map T, key_t key) {
+map_node map_find(map T, map_key_t key) {
     return map_node_find(T->root, key, T->nil);
 }
 
-map_node map_node_find(map_node n, key_t key, map_node nil) {
+map_node map_node_find(map_node n, map_key_t key, map_node nil) {
     if (n == nil) {
         return NULL;
     }
 
-    if (key == n->key) {
-        return n;
-    }
+    // switch (compare_longs(key.ld, n->key.ld)) {
+    //     case -1:
+    //         return map_node_find(n->left, key, nil);
+    //     case 1:
+    //         return map_node_find(n->right, key, nil);
+    //     default:
+    //         return n;
+    // }
 
-    if (key > n->key) {
+    if (key.ld > n->key.ld) {
         return map_node_find(n->right, key, nil);
     }
 
-    if (key < n->key) {
+    if (key.ld < n->key.ld) {
         return map_node_find(n->left, key, nil);
     }
+
+    return n;
 }
 
 void map_left_rotate(map T, map_node x) {
@@ -126,7 +135,7 @@ void map_insert(map T, map_node z) {
 
     while (x != T->nil) {
         y = x;
-        if (z->key < x->key) {
+        if (z->key.ld < x->key.ld) {
             x = x->left;
         } else {
             x = x->right;
@@ -136,7 +145,7 @@ void map_insert(map T, map_node z) {
     z->parent = y;
     if (y == T->nil) {
         T->root = z;
-    } else if (z->key < y->key) {
+    } else if (z->key.ld < y->key.ld) {
         y->left = z;
     } else {
         y->right = z;
@@ -146,7 +155,10 @@ void map_insert(map T, map_node z) {
     z->right = T->nil;
     z->color = RED;
 
-    /* Insert fixup */
+    map_insert_fixup(T, z);
+}
+
+void map_insert_fixup(map T, map_node z) {
     while (z->parent->color == RED) {
         if (z->parent == z->parent->parent->left) {
             map_node y = z->parent->parent->right;
