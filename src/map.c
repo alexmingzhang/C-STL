@@ -51,6 +51,23 @@ map *map_construct() {
     return m;
 }
 
+void map_destruct(map *m) {
+    map_destruct_subtree(m->root, m->nil);
+    free(m->nil);
+    free(m);
+}
+
+void map_destruct_subtree(map_node *n, map_node *nil) {
+    if (n == nil) {
+        return;
+    }
+
+    map_destruct_subtree(n->left, nil);
+    map_destruct_subtree(n->right, nil);
+
+    free(n);
+}
+
 map_node *map_find(map *T, map_key_t key) {
     return map_node_find(T->root, key, T->nil);
 }

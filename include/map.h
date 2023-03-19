@@ -33,7 +33,6 @@ typedef struct map_node {
 } map_node;
 
 map_node *map_node_construct(map_key_t, map_val_t);
-
 void map_node_print(map_node *);
 
 /**
@@ -47,6 +46,7 @@ typedef struct map {
 
 map *map_construct();
 void map_destruct(map *);
+void map_destruct_subtree(map_node *, map_node *);
 
 map_node *map_find(map *T, map_key_t key);
 map_node *map_node_find(map_node *, map_key_t, map_node *);
