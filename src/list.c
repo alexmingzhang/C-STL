@@ -13,9 +13,9 @@
 #include <stdio.h>
 
 list *list_construct() {
-    list *l = malloc(sizeof(list));
-    l->head = malloc(sizeof(list_node));
-    l->tail = malloc(sizeof(list_node));
+    list *l = (list *)malloc(sizeof(list));
+    l->head = (list_node *)malloc(sizeof(list_node));
+    l->tail = (list_node *)malloc(sizeof(list_node));
 
     l->head->next = l->tail;
     l->head->prev = NULL;
@@ -58,7 +58,7 @@ void list_it_sub(list_it *it, size_t pos) {
 }
 
 void list_insert(list_it *it, list_val_t val) {
-    list_node *n = malloc(sizeof(list_node));
+    list_node *n = (list_node *)malloc(sizeof(list_node));
     n->val = val;
 
     (*it)->prev->next = n;
@@ -74,7 +74,7 @@ void list_insert(list_it *it, list_val_t val) {
 
 void list_push_back(list *l, list_val_t val) {
     l->tail->val = val;
-    l->tail->next = malloc(sizeof(list_node));
+    l->tail->next = (list_node *)malloc(sizeof(list_node));
     l->tail->next->prev = l->tail;
     l->tail->next->next = NULL;
     l->tail = l->tail->next;

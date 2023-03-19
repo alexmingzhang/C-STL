@@ -22,7 +22,7 @@
 #include "util.h"
 
 map_node *map_node_construct(map_key_t key, map_val_t val) {
-    map_node *n = malloc(sizeof(map_node));
+    map_node *n = (map_node *)malloc(sizeof(map_node));
     n->key = key;
     n->val = val;
 
@@ -38,8 +38,8 @@ void map_node_print(map_node *n) {
 }
 
 map *map_construct() {
-    map *m = malloc(sizeof(map));
-    m->nil = malloc(sizeof(map_node));
+    map *m = (map *)malloc(sizeof(map));
+    m->nil = (map_node *)malloc(sizeof(map_node));
     m->nil->val.ld = LONG_MAX;
     m->nil->parent = m->nil;
     m->nil->left = m->nil;

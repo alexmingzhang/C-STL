@@ -14,10 +14,10 @@
 #include <assert.h>
 
 vector *vector_construct() {
-    vector *v = malloc(sizeof(vector));
+    vector *v = (vector *)malloc(sizeof(vector));
     v->size = 0;
     v->capacity = 1;
-    v->data = malloc(sizeof(vec_val_t));
+    v->data = (vec_val_t *)malloc(sizeof(vec_val_t));
     return v;
 }
 
@@ -40,12 +40,12 @@ vector_it vector_end(vector *v) { return (v->data + v->size); }
 bool vector_is_empty(vector *v) { return v->size == 0; }
 
 void vector_reserve(vector *v, size_t new_capacity) {
-    v->data = realloc(v->data, sizeof(vec_val_t) * new_capacity);
+    v->data = (vec_val_t *)realloc(v->data, sizeof(vec_val_t) * new_capacity);
     v->capacity = new_capacity;
 }
 
 void vector_shrink_to_fit(vector *v) {
-    v->data = realloc(v->data, sizeof(vec_val_t) * v->size);
+    v->data = (vec_val_t *)realloc(v->data, sizeof(vec_val_t) * v->size);
     v->capacity = v->size;
 }
 
