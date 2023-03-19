@@ -1,4 +1,13 @@
-/* Based on "Introduction to Algorithms" by CLRS */
+/**
+ * @file map.c
+ * @author Alex M. Zhang
+ * @brief Contains the definitions of map functions
+ * @date 2023-03-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 // TODO: Comments
 // TODO: insert_int, insert_str, find_int, find_str
 // TODO: random access iterator
@@ -14,11 +23,6 @@
 
 map_node *map_node_construct(map_key_t key, map_val_t val) {
     map_node *n = malloc(sizeof(map_node));
-    // n->parent = NULL;
-    // n->left = NULL;
-    // n->right = NULL;
-    // n->color = RED;
-
     n->key = key;
     n->val = val;
 
@@ -41,12 +45,6 @@ map *map_construct() {
     m->nil->left = m->nil;
     m->nil->right = m->nil;
     m->nil->color = BLACK;
-
-    // m->root = malloc(sizeof(map_node));
-    // m->root->parent = m->nil;
-    // m->root->left = m->nil;
-    // m->root->right = m->nil;
-    // m->root->color = BLACK;
 
     m->root = m->nil;
 

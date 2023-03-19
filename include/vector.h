@@ -1,3 +1,14 @@
+/**
+ * @file vector.h
+ * @author Alex M. Zhang
+ * @brief Contains the definition of the vector struct as well as
+ * prototypes of vector functions
+ * @date 2023-03-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #pragma once
 
 #include <stdbool.h>
@@ -12,7 +23,7 @@ typedef vec_val_t *vector_it;
  * @brief Resizeable array similar to std::vector
  *
  */
-typedef struct _vector {
+typedef struct vector {
     size_t size;
     size_t capacity;
     vec_val_t *data;

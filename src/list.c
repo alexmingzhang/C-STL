@@ -1,11 +1,21 @@
+/**
+ * @file list.c
+ * @author Alex M. Zhang
+ * @brief Contains the definitions of list functions
+ * @date 2023-03-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include "list.h"
 
 #include <stdio.h>
 
 list *list_construct() {
-    list *l = malloc(sizeof(struct _list));
-    l->head = malloc(sizeof(struct _list_node));
-    l->tail = malloc(sizeof(struct _list_node));
+    list *l = malloc(sizeof(list));
+    l->head = malloc(sizeof(list_node));
+    l->tail = malloc(sizeof(list_node));
 
     l->head->next = l->tail;
     l->head->prev = NULL;
@@ -48,7 +58,7 @@ void list_it_sub(list_it *it, size_t pos) {
 }
 
 void list_insert(list_it *it, list_val_t val) {
-    list_node *n = malloc(sizeof(struct _list_node));
+    list_node *n = malloc(sizeof(list_node));
     n->val = val;
 
     (*it)->prev->next = n;
@@ -64,7 +74,7 @@ void list_insert(list_it *it, list_val_t val) {
 
 void list_push_back(list *l, list_val_t val) {
     l->tail->val = val;
-    l->tail->next = malloc(sizeof(struct _list_node));
+    l->tail->next = malloc(sizeof(list_node));
     l->tail->next->prev = l->tail;
     l->tail->next->next = NULL;
     l->tail = l->tail->next;

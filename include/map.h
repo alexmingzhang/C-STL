@@ -1,4 +1,14 @@
-/* Based on "Introduction to Algorithms" by CLRS */
+/**
+ * @file map.h
+ * @author Alex M. Zhang
+ * @brief Contains the definitions of map and map_node structs as well as
+ * prototypes of map functions
+ * @version 0.1
+ * @date 2023-03-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #pragma once
 
@@ -13,10 +23,10 @@ typedef bool map_color_t;
 typedef tvar map_key_t;
 typedef tvar map_val_t;
 
-typedef struct _map_node {
-    struct _map_node *parent;
-    struct _map_node *left;
-    struct _map_node *right;
+typedef struct map_node {
+    struct map_node *parent;
+    struct map_node *left;
+    struct map_node *right;
     map_key_t key;
     map_val_t val;
     map_color_t color;
@@ -30,7 +40,7 @@ void map_node_print(map_node *);
  * @brief Red-black tree, similar to std::map
  *
  */
-typedef struct _map {
+typedef struct map {
     map_node *nil;
     map_node *root;
 } map;

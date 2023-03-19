@@ -1,3 +1,14 @@
+/**
+ * @file list.h
+ * @author Alex M. Zhang
+ * @brief Contains the definitions of the list and list_node structs as well as
+ * prototypes of list functions
+ * @date 2023-03-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #pragma once
 
 #include <stdbool.h>
@@ -7,19 +18,19 @@
 
 typedef tvar list_val_t;
 
-typedef struct _list_node {
+typedef struct list_node {
     list_val_t val;
-    struct _list_node *next;
-    struct _list_node *prev;
+    struct list_node *next;
+    struct list_node *prev;
 } list_node;
 
 typedef list_node *list_it;
 
 /**
- * @brief Doubly linked, similar to std::list
+ * @brief Doubly-linked list, similar to std::list
  *
  */
-typedef struct _list {
+typedef struct list {
     list_node *head;
     list_node *tail;
 } list;

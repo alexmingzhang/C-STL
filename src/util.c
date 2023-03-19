@@ -1,3 +1,13 @@
+/**
+ * @file util.c
+ * @author Alex M. Zhang
+ * @brief Contains the definitions of utility functions
+ * @date 2023-03-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include "util.h"
 
 #include <stdio.h>

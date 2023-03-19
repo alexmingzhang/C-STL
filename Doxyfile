@@ -1,0 +1,3 @@
+INPUT = src/
+OUTPUT_DIRECTORY = docs/
+PROJECT_NAME = "C-STL"

@@ -1,9 +1,20 @@
+/**
+ * @file vector.c
+ * @author Alex M. Zhang
+ * @brief Contains the definitions of vector functions
+ * @version 0.1
+ * @date 2023-03-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include "vector.h"
 
 #include <assert.h>
 
 vector *vector_construct() {
-    vector *v = malloc(sizeof(struct _vector));
+    vector *v = malloc(sizeof(vector));
     v->size = 0;
     v->capacity = 1;
     v->data = malloc(sizeof(vec_val_t));
