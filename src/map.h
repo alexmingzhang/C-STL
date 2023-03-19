@@ -23,6 +23,7 @@ typedef struct _map_node {
 } map_node;
 
 map_node *map_node_construct(map_key_t, map_val_t);
+
 void map_node_print(map_node *);
 
 /**

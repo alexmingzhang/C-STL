@@ -88,4 +88,4 @@ void vector_clear(vector *);
 void vector_insert(vector *, size_t, vec_val_t);
 void vector_erase(vector *, size_t);
 void vector_erase_range(vector *, size_t, size_t);
-void vector_pushback(vector *, vec_val_t);
+void vector_push_back(vector *, vec_val_t);

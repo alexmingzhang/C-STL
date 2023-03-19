@@ -68,7 +68,7 @@ void vector_erase_range(vector *v, size_t first, size_t last) {
     v->size -= num_erase;
 }
 
-void vector_pushback(vector *v, vec_val_t value) {
+void vector_push_back(vector *v, vec_val_t value) {
     if (v->capacity < v->size + 1) {
         vector_reserve(v, v->capacity * 2);
     }

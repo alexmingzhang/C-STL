@@ -58,8 +58,7 @@ map_node *map_find(map *T, map_key_t key) {
 }
 
 map_node *map_node_find(map_node *n, map_key_t key, map_node *nil) {
-    printf("asdf: %ld %ld \n", n->val.ld, key.ld);
-    print_bytes(&(n->val), 8);
+    // print_bytes(&(n->val), 8);
     if (n == nil) {
         return NULL;
     }
