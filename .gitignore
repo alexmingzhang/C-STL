@@ -2,6 +2,7 @@
 *
 !*.*
 !*/
+!makefile
 
 .DS_Store
 .vscode

@@ -68,6 +68,7 @@ void vector_erase(vector *v, size_t index) {
     for (size_t i = index; i < v->size - 1; ++i) {
         v->data[i] = v->data[i + 1];
     }
+
     --v->size;
 }
 
@@ -76,6 +77,7 @@ void vector_erase_range(vector *v, size_t first, size_t last) {
     for (size_t i = first; i < v->size - num_erase; ++i) {
         v->data[i] = v->data[i + num_erase];
     }
+
     v->size -= num_erase;
 }
 
