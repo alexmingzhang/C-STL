@@ -1,4 +1,4 @@
-#define NUMTESTS 10000000
+#define NUMTESTS 1000000
 
 #include <chrono>
 #include <iostream>
@@ -15,6 +15,7 @@ int main() {
     std::chrono::high_resolution_clock::time_point begin;
     auto rng = std::default_random_engine();
 
+    // Test vector speed
     {
         std::vector<int> stl_vec;
         vector *cstl_vec = vector_construct();
@@ -25,7 +26,7 @@ int main() {
             stl_vec.push_back(i);
         }
 
-        double stl_vec_time =
+        double stl_time =
             static_cast<double>(
                 std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::high_resolution_clock::now() - begin)
@@ -40,7 +41,7 @@ int main() {
             vector_push_back(cstl_vec, t);
         }
 
-        double cstl_vec_time =
+        double cstl_time =
             static_cast<double>(
                 std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::high_resolution_clock::now() - begin)
@@ -48,13 +49,10 @@ int main() {
             1000000000.0;
 
         std::cout << "Testing vector " << NUMTESTS << " push back operations\n";
-        std::cout << "STL Vector: " << stl_vec_time << " seconds\n";
-        std::cout << "C-STL Vector: " << cstl_vec_time << " seconds\n";
-        std::cout << "C-STL is " << stl_vec_time / cstl_vec_time
-                  << "x faster\n\n";
+        std::cout << "STL Vector: " << stl_time << " seconds\n";
+        std::cout << "C-STL Vector: " << cstl_time << " seconds\n";
+        std::cout << "C-STL is " << stl_time / cstl_time << "x faster\n\n";
     }
-
-    exit(1);
 
     {
         std::list<int> stl_list;

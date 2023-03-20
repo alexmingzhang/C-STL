@@ -11,6 +11,9 @@
 
 #pragma once
 
+#define CSTL_VECTOR_GROWTH_FACTOR 1.5
+#define CSTL_VECTOR_STARTING_CAPACITY 2
+
 #include <stdbool.h>
 #include <stdlib.h>
 

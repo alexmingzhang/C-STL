@@ -16,8 +16,9 @@
 vector *vector_construct() {
     vector *v = (vector *)malloc(sizeof(vector));
     v->size = 0;
-    v->capacity = 1;
-    v->data = (vec_val_t *)malloc(sizeof(vec_val_t));
+    v->capacity = CSTL_VECTOR_STARTING_CAPACITY;
+    v->data =
+        (vec_val_t *)malloc(sizeof(vec_val_t) * CSTL_VECTOR_STARTING_CAPACITY);
     return v;
 }
 
@@ -83,8 +84,9 @@ void vector_erase_range(vector *v, size_t first, size_t last) {
 
 void vector_push_back(vector *v, vec_val_t value) {
     if (v->capacity < v->size + 1) {
-        vector_reserve(v, v->capacity * 2);
+        vector_reserve(v, v->capacity * CSTL_VECTOR_GROWTH_FACTOR);
     }
 
-    v->data[v->size++] = value;
+    v->data[v->size] = value;
+    ++v->size;
 }

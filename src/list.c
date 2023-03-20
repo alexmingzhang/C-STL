@@ -65,11 +65,6 @@ void list_insert(list_it *it, list_val_t val) {
     n->prev = (*it)->prev;
     (*it)->prev = n;
     n->next = *it;
-
-    // (*it)->next->prev = n;
-    // n->next = (*it)->next;
-    // (*it)->next = n;
-    // n->prev = *it;
 }
 
 void list_push_back(list *l, list_val_t val) {
