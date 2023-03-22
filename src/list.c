@@ -66,11 +66,3 @@ void list_insert(list_it *it, list_val_t val) {
     (*it)->prev = n;
     n->next = *it;
 }
-
-void list_push_back(list *l, list_val_t val) {
-    l->tail->val = val;
-    l->tail->next = (list_node *)malloc(sizeof(list_node));
-    l->tail->next->prev = l->tail;
-    l->tail->next->next = NULL;
-    l->tail = l->tail->next;
-}

@@ -21,14 +21,6 @@
 
 #include "util.h"
 
-map_node *map_node_construct(map_key_t key, map_val_t val) {
-    map_node *n = (map_node *)malloc(sizeof(map_node));
-    n->key = key;
-    n->val = val;
-
-    return n;
-}
-
 void map_node_print(map_node *n) {
     printf(
         "Key: %ld | Val: %i | Color: %c | Parent: %i | Left: %i | Right: "
@@ -57,7 +49,7 @@ void map_destruct(map *m) {
     free(m);
 }
 
-void map_destruct_subtree(map_node *n, map_node *nil) {
+void map_destruct_subtree(map_node *n, const map_node *nil) {
     if (n == nil) {
         return;
     }
@@ -68,24 +60,10 @@ void map_destruct_subtree(map_node *n, map_node *nil) {
     free(n);
 }
 
-map_node *map_find(map *T, map_key_t key) {
-    return map_node_find(T->root, key, T->nil);
-}
-
 map_node *map_node_find(map_node *n, map_key_t key, map_node *nil) {
-    // print_bytes(&(n->val), 8);
     if (n == nil) {
         return NULL;
     }
-
-    // switch (compare_longs(key.ld, n->key.ld)) {
-    //     case -1:
-    //         return map_node_find(n->left, key, nil);
-    //     case 1:
-    //         return map_node_find(n->right, key, nil);
-    //     default:
-    //         return n;
-    // }
 
     if (key.ld > n->key.ld) {
         return map_node_find(n->right, key, nil);
@@ -146,7 +124,6 @@ void map_right_rotate(map *T, map_node *y) {
 
 void map_insert(map *T, map_node *z) {
     map_node *x = T->root;
-
     map_node *y = T->nil;
 
     while (x != T->nil) {
@@ -217,8 +194,6 @@ void map_insert_fixup(map *T, map_node *z) {
 
     T->root->color = BLACK;
 }
-
-void map_print(map *T) { map_print_inorder(T->root, T->nil); }
 
 void map_print_inorder(map_node *n, map_node *nil) {
     if (n == nil) {

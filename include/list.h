@@ -94,4 +94,10 @@ void list_push_front(list *, list_val_t);
  * @brief Add something to the end of the list
  *
  */
-void list_push_back(list *, list_val_t);
+inline void list_push_back(list *l, list_val_t val) {
+    l->tail->val = val;
+    l->tail->next = (list_node *)malloc(sizeof(list_node));
+    l->tail->next->prev = l->tail;
+    l->tail->next->next = NULL;
+    l->tail = l->tail->next;
+}

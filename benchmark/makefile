@@ -1,14 +1,17 @@
 CC = g++
-CFLAGS = -Wall -Wextra -Wpedantic -pg -I../include
+CFLAGS = -std=c++20 -Wall -Wextra -Wpedantic -pg -I../include
 OBJS = util.o vector.o list.o map.o
 
-all: benchmark benchmarkoptimized
+all: benchmark benchmarkO3 benchmarkOfast
 
 benchmark: benchmark.cpp $(OBJS)
-	$(CC) $(CFLAGS) benchmark.cpp $(OBJS) -o benchmark
+	$(CC) $(CFLAGS) -O0 benchmark.cpp $(OBJS) -o benchmark
 
-benchmarkoptimized: benchmark.cpp $(OBJS)
-	$(CC) $(CFLAGS) -O3 benchmark.cpp $(OBJS) -o benchmarkoptimized
+benchmarkO3: benchmark.cpp $(OBJS)
+	$(CC) $(CFLAGS) -O3 benchmark.cpp $(OBJS) -o benchmarkO3
+
+benchmarkOfast: benchmark.cpp $(OBJS)
+	$(CC) $(CFLAGS) -Ofast benchmark.cpp $(OBJS) -o benchmarkOfast
 
 map_test: map_test.c $(OBJS)
 	$(CC) $(CFLAGS) map_test.c $(OBJS) -o map_test

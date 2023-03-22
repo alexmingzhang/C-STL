@@ -13,6 +13,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "tvar.h"
 
@@ -32,7 +33,14 @@ typedef struct map_node {
     map_color_t color;
 } map_node;
 
-map_node *map_node_construct(map_key_t, map_val_t);
+inline map_node *map_node_construct(map_key_t key, map_val_t val) {
+    map_node *n = (map_node *)malloc(sizeof(map_node));
+    n->key = key;
+    n->val = val;
+
+    return n;
+}
+
 void map_node_print(map_node *);
 
 /**
@@ -46,18 +54,21 @@ typedef struct map {
 
 map *map_construct();
 void map_destruct(map *);
-void map_destruct_subtree(map_node *, map_node *);
+void map_destruct_subtree(map_node *, const map_node *);
 
-map_node *map_find(map *T, map_key_t key);
 map_node *map_node_find(map_node *, map_key_t, map_node *);
+
+inline map_node *map_find(map *T, map_key_t key) {
+    return map_node_find(T->root, key, T->nil);
+}
 
 void map_left_rotate(map *, map_node *);
 void map_right_rotate(map *, map_node *);
 void map_insert(map *, map_node *);
 void map_insert_fixup(map *, map_node *);
 
-void map_print(map *);
 void map_print_inorder(map_node *, map_node *);
+inline void map_print(map *T) { map_print_inorder(T->root, T->nil); }
 
 void map_verify(map *);
 void map_node_recursive_verify(map_node *, map_node *, int, int *);
